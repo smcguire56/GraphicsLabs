@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Sean McGuire">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      canvas {
+        border: 1px solid grey; 
+      }
+    </style>
+
+  </head>
+
+  <body>
+	<p>Dots Drawer.</p>
+
+    <canvas id="canvas-for-ball"></canvas>
+
+    <script type="text/javascript">
+      var noClicks = 0;
+      
+      // Gets a handle to the element with id canvasOne.
+      var canvas = document.getElementById("canvas-for-ball");
+      // Get a 2D context for the canvas.
+      var ctx = canvas.getContext("2d");
+      // Make the fill style red.
+      ctx.fillStyle = "rgb(0, 255, 255)";
+      
+      
+        canvas.addEventListener("click", function(event) { 
+        var rect = canvas.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        noClicks += 1;
+        console.log(noClicks);
+      });
+    </script>
+
+  </body>
+
+</html>

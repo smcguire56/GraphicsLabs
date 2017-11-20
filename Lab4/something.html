@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+        canvas {
+            border: 1px solid grey;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvas-for-ball"></canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("canvas-for-ball");
+        canvas.width = 500;
+        canvas.height = 500;
+        var ctx = canvas.getContext("2d");
+        
+        class Ball {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.xv = 3;
+                this.yv = 3;
+                this.mass = 0.3;
+            }
+
+            // methods
+            draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.fillStyle = "yellow";
+                ctx.strokeStyle = "Black";
+
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fill();
+                ctx.closePath();
+
+
+                if (this.x +  this.xv > canvas.width -  this.r ||  this.x +  this.xv <  this.r) {
+                     this.xv = - this.xv;
+                    //  this.rotation = -this.rotation;
+                }
+
+                if (this.y + this.yv > canvas.height - this.r || this.y + this.yv < this.r) {
+                    this.yv = -this.yv * this.mass;
+                    // this.rotation = -this.rotation;
+                }
+            }
+            setColor() {
+
+            }
+            rotate() {
+
+            }
+            move() {
+                this.x += this.xv;
+                this.y += this.yv;
+            }
+            resize() {
+
+            }
+        } //ball
+
+        var ball = new Ball(50, 50, 20);
+
+        function step() {
+            ball.draw();
+            ball.move();
+            requestAnimationFrame(step);
+        }
+
+        step();
+    </script>
+
+</body>
+
+</html>

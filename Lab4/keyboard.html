@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 4</title>
+
+    <style type="text/css">
+        canvas {
+            border: 1px solid grey;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas-for-ball"></canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("canvas-for-ball");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "rgb(255, 0, 0)";
+
+        // create a canvas with 200 pixels free on the side and bottom
+        function init() {
+            ctx.canvas.width = window.innerWidth - 200;
+            ctx.canvas.height = window.innerHeight - 200;
+        }
+        init();
+
+        // the class Ball has a constructor with various local variables 
+        class Ball {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.rotation = 0;
+                this.dx = getRandomInt(-10, 10); // initial speed is random for the x direction and y direction
+                this.dy = getRandomInt(-10, 10);
+                this.mass = getRandomInt(1, 4); // the mass is also random per ball
+            }
+
+            // first method is to draw the ball. this case is a pizza 
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                // inner pizza cut here
+                ctx.arc(this.x, this.y, this.r * 0.85, 0, 2 * Math.PI);
+                // set the color of the pizza and fill it 
+                ctx.fillStyle = "orange";
+                ctx.fill();
+                ctx.stroke();
+
+                // the amount of slices cut in the pizza is here
+                var slices = 9;
+                var sliceSize = 2 * Math.PI / slices;
+
+                // loop over the amount of pizza and if its rotating
+                for (i = this.rotation; i <= slices; i++) {
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo((this.r * Math.cos(sliceSize * i)) + this.x, (this.r * Math.sin(sliceSize * i) + this.y));
+                }
+                // finished drawing the pizza
+                ctx.closePath();
+                ctx.stroke();
+
+                // catch the pizza if it moves off the canvas (x direction)
+                if (this.x > canvas.width - this.r || this.x < this.r) {
+                    this.dx = -this.dx;
+                }
+                // catch the pizza if it moves off the canvas (y direction)
+                if (this.y > canvas.height - this.r || this.y < this.r) {
+                    this.dy = -this.dy;
+                }
+            }
+
+            // move function to initiate the balls movement
+            move() {
+                this.x += this.dx;
+                this.y += this.dy;
+            }
+
+            // rotate function to move the pizza around
+            rotate(rotation_speed) {
+                // add the rotation speed to the rotation variable
+                this.rotation += rotation_speed;
+                if (this.rotation >= 1) {
+                    this.rotation = 0;
+                }
+                this.draw();
+            }
+        }
+
+        // declare the balls here, add more 
+        var ballCount = 300;
+        var balls = new Array();
+
+        // loop over the amount of balls and make their positions, size random.
+        for (var i = 0; i < ballCount; i++)
+            balls.push(new Ball(getRandomInt(140, (canvas.width - 100)), getRandomInt(140, (canvas.height - 100)), getRandomInt(50, 200)));
+            
+        
+
+        // stop over each frame here
+        function step() {
+            // clear the screen 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // loop over the ball count and draw and move them 
+            for (var i = 0; i < ballCount; i++) {
+                balls[i].draw();
+                balls[i].move();
+            }
+            // distance between balls equation
+            var xs = balls[0].x - balls[1].x;
+            var ys = balls[0].y - balls[1].y;
+
+            var distance = Math.sqrt(xs * xs + ys * ys);
+
+            // check for collision between the first 2 balls
+            if (distance < balls[0].r + balls[1].r) {
+                console.log("collide");
+                collided(balls[0], balls[1]);
+            }
+            // loop to the next frame
+            requestAnimationFrame(step);
+        }
+        step();
+
+        // change the velocity of the first ball with arrow keys using JQuery
+        $(document.body).on('keydown', function (e) {
+            console.log(e.which);
+            switch (e.which) {
+                case 37:
+                    balls[0].dx--;
+                    break;
+                case 39:
+                    balls[0].dx++;
+                    break;
+                case 40:
+                    balls[0].dy++;
+                    break;
+                case 38:
+                    balls[0].dy--;
+                    break;
+            }
+        });
+
+        // move the ball where the user clicks
+        canvas.addEventListener("click", function (event) {
+            var rect = canvas.getBoundingClientRect();
+            balls[0].x = event.clientX - rect.left;
+            balls[0].y = event.clientY - rect.top;
+            balls[0].draw();
+        });
+
+        // detects when the balls collides and changes their velocities
+        function collided(ball, ball2) {
+            var speedDifferencex = ball.dx - ball2.dx;
+            var speedDifferencey = ball.dy - ball2.dy;
+
+            var xDist = ball2.x - ball.x;
+            var yDist = ball2.y - ball.y;
+
+            if (speedDifferencex * xDist + speedDifferencey * yDist > 0) {
+
+                var u1 = ball.dx;
+                var u2 = ball2.dx;
+                var m1 = ball.mass;
+                var m2 = ball2.mass;
+
+                // conservation of momentum is kept the same, no other forces act on these objects but themselves 
+                var v1 = (u1 * (m1 - m2) / (m1 + m2) + u2 * 2 * m2 / (m1 + m2));
+                var v2 = (u2 * (m1 - m2) / (m1 + m2) + u1 * 2 * m2 / (m1 + m2));
+
+                ball.dx = v1;
+                ball.dy = u1;
+
+                ball2.dx = v2;
+                ball2.dy = u2;
+            }
+        }
+
+        // function for getting a random number
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+    </script>
+
+</body>
+
+</html>
