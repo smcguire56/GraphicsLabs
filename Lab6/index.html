@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Transformations</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        canvas {
+            border-style: ridge;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="transformcan" width="600" height="600" style="border:1px solid"></canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("transformcan");
+        var ctx = canvas.getContext("2d");
+
+        class Pacman {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+            }
+
+            draw() {
+                if(rotate == 2){
+                // new pacman in new position
+                ctx.beginPath();
+                ctx.fillStyle = "yellow";
+                ctx.arc(this.x, this.y, this.r, 0.25 * Math.PI, 1.75 * Math.PI);
+                ctx.lineTo(this.x, this.y);
+                ctx.lineTo(this.x + (this.r * Math.cos(0.25 * Math.PI)), this.y + (this.r * Math.sin(0.25 * Math.PI)));
+                ctx.stroke();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y + 10, 2, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+                }
+                else{
+                 // new pacman in new position
+                 ctx.beginPath();
+                ctx.fillStyle = "yellow";
+                ctx.arc(this.x, this.y, this.r, 0.25 * Math.PI, 1.75 * Math.PI);
+                ctx.lineTo(this.x, this.y);
+                ctx.lineTo(this.x + (this.r * Math.cos(0.25 * Math.PI)), this.y + (this.r * Math.sin(0.25 * Math.PI)));
+                ctx.stroke();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y - 10, 2, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();                   
+                }
+
+            }
+
+            move(x, y) {
+                this.x = this.x + x;
+                this.y = this.y + y;
+            }
+        }
+
+        function clear() {
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            ctx.restore();
+        }
+
+        function drawGrid() {
+            ctx.rect(0, 0, 630, 630);
+            ctx.rect(30, 30, 530, 530);
+            ctx.rect(130, 130, 330, 330);
+            ctx.fillStyle = "#b5baa1";
+            ctx.fill();
+            ctx.stroke();
+
+        }
+        var num_steps = 0;
+        var rotate = 0;
+
+        ctx.translate(100, 100);
+
+        function repeatme() {
+            clear();
+            ctx.translate(1, 0);
+            p1.draw();
+            num_steps++;
+
+            if (num_steps % 400 == 0) {
+                rotate++;
+                if(rotate > 2){
+                    rotate = -1;
+                }
+                ctx.rotate(Math.PI / 2);
+            }
+            window.requestAnimationFrame(repeatme);
+        }
+
+        var p1 = new Pacman(0, 0, 30);
+
+        // start animation.
+        repeatme();
+    </script>
+</body>
+
+</html>
