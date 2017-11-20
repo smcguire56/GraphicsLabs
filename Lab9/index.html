@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>D3.js Demo</title>
+ <meta charset="UTF-8">
+ <style type="text/css"></style>
+ <script src="https://d3js.org/d3.v4.min.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+ </head>
+ <body>
+ <script type="text/javascript">
+
+    function callback(json){
+            data = json.currency;
+            //console.log(data);
+            plotCurrencyData(data);
+    }
+    $.ajax({
+        url: "http://34.249.149.110:5000",
+        dataType: "jsonp"
+    });
+
+  function plotCurrencyData(data)
+  {
+        var margin = {top: 50, right: 50, bottom: 50, left: 50},
+        width = 900 - margin.left - margin.right;
+        height = 670 - margin.top - margin.bottom;
+
+        var parseDate = d3.timeParse("%d/%m/%Y");
+
+        // set the ranges
+        var x = d3.scaleTime()
+            .domain(d3.extent(data, function(d) {return parseDate(d["Date"])}))
+            .range([0, width]);
+
+        var y = d3.scaleLinear()
+            .domain(d3.extent(data, function(d) {return d["GBP/EUR"] }))
+            .range([height, 0]);
+
+            var x_axis = d3.axisBottom(x).ticks(10);
+            var y_axis = d3.axisLeft(y).ticks(10);
+
+        // define the line
+        var valueline = d3.line()
+            .x(function(d) { return x(parseDate(d["Date"])); })
+            .y(function(d) { return y(d["GBP/EUR"]); });
+
+        // append the svg obgect to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+            svg.append("g")
+                .attr("class", "x axis")
+                .call(x_axis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(y_axis);
+
+            svg.append("path")
+                .attr("d", valueline(data));
+
+    }
+
+
+ 
+ </script>
+ </body>
+</html>
