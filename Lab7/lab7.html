@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <style type="text/css">
+ #circle{
+	fill: red;
+	fill-opacity: 0.75;
+ }
+ #PacMan3D{
+	fill: yellow;
+	stroke: black;
+ }
+ 
+ #smallPacMan1 {
+  fill: yellow;
+  stroke: black;
+}
+ #smallPacMan2 {
+  fill: yellow;
+  stroke: black;
+}
+</style>
+ </head>
+ <body>
+	<svg height="600" width="600">
+	  <rect x="10" y="10" width="100" height="200" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+	  <circle cx="100" cy="100" r="20" stroke="black" stroke-width="3" id="circle"/>
+	  <text x="50" y="50" fill="red" font-size="24">Sean</text>
+	  
+
+	  <path id="smallPacMan1" d="M 200 10 c-2.934-3.42-7.288-5.588-12.148-5.588-8.837
+	  0-16 7.163-16 16s7.163 16 16 16c4.86 0 9.213-2.167 12.148-5.588l-10.148-10.412
+	  10.148-10.412zM192 8 c1.232 0 2.231 0.999 2.231 2.231s-0.999 2.231-2.231
+	  2.231-2.231-0.999-2.231-2.231c0-1.232 0.999-2.231 2.231-2.231z"></path>
+	  
+	  
+	  <path id="smallPacMan2" style="visibility: hidden" d="M 190 190 c-2.934-3.42-7.288-5.588-12.148-5.588-8.837
+	  0-16 7.163-16 16s7.163 16 16 16c4.86 0 9.213-2.167 12.148-5.588l-10.148-10.412
+	  10.148-10.412zM182 189 c1.232 0 2.231 0.999 2.231 2.231s-0.999 2.231-2.231
+	  2.231-2.231-0.999-2.231-2.231c0-1.232 0.999-2.231 2.231-2.231z"></path>
+	  
+	  
+	  <circle cx="290" cy="290" r="60" id="PacMan3D"/>
+	  
+	  <ellipse cx="290" cy="290" rx="60" ry="30"/>
+
+	  <circle cx="250" cy="230" r="20"/>
+	  <circle cx="250" cy="230" r="4" fill="white"/>
+
+	  <circle cx="330" cy="230" r="20"/>
+	  <circle cx="330" cy="230" r="4" fill="white"/>
+	
+	</svg>
+ <script type="text/javascript">
+ 
+function showIt1() {
+  document.getElementById("smallPacMan1").style.visibility = "hidden";
+}
+setTimeout("showIt1()", 1000); // after 1 secs
+
+
+function showIt2() {
+  document.getElementById("smallPacMan2").style.visibility = "visible";
+}
+setTimeout("showIt2()", 1000); // after 1 secs
+
+function showIt3() {
+	document.getElementById("smallPacMan2").style.fill = "lightgreen";
+}
+setTimeout("showIt3()", 2000); // after 2 secs
+
+
+ </script>
+ 
+
+
+ </body>
+</html>
+
