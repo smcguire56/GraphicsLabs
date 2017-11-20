@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+    <style type="text/css">
+		canvas{
+			border-style: ridge;
+		}
+    </style>
+
+  </head>
+  <body>
+
+    <canvas id="canvasOne" width="600" height="600" style="border:1px solid"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		// Set the fill colour to bright red.
+		ctx.fillStyle = "rgb(0 ,255 , 255)";
+		// Create a filled rectangle at co-ordinates (10,10)
+		// with height 100 and width 200.
+		ctx.fillRect(10, 10, 200, 100);
+		
+		//Change color and add a new square 
+		ctx.fillStyle = "rgba(255, 220, 220, 0.5)";
+		ctx.fillRect(180, 90, 140, 140);
+		
+		// draw initial pac man
+		ctx.beginPath();
+		ctx.fillStyle = "yellow";
+		ctx.arc(300,75,50,0.05*Math.PI,1.95*Math.PI);
+		ctx.lineTo(300,75);
+		ctx.lineTo(300+(50 * Math.cos(0.05*Math.PI)),75+(50 * Math.sin(0.05*Math.PI)));
+
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.beginPath();
+		ctx.fillStyle = "rgba(12, 220, 220, 0.5)";
+		ctx.arc(370,475,50,2*Math.PI,0);
+		ctx.fillRect(320, 425, 100, 100);
+
+		ctx.stroke();
+		ctx.fill();
+	
+		// after 3 seconds draw over initial pac man and draw a new one 
+		setTimeout(function() {
+		myFunction(); 
+		}, 3000);
+		
+		function myFunction(){
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		// Set the fill colour to bright red.
+		ctx.fillStyle = "white";
+		// Create a filled rectangle at co-ordinates (248, 10)
+		// white square over pacman	
+		ctx.fillRect(248, 10, 140, 140);
+
+		// new pacman in new position
+		ctx.beginPath();
+		ctx.fillStyle = "yellow";
+		ctx.arc(400,75,50,0.25*Math.PI,1.75*Math.PI);
+		ctx.lineTo(400,75);
+		ctx.lineTo(400+(50 * Math.cos(0.25*Math.PI)),75+(50 * Math.sin(0.25*Math.PI)));
+		ctx.stroke();
+		ctx.fill();
+		// redraw the square 
+		ctx.fillStyle = "rgba(255, 220, 220, 0.5)";
+		ctx.fillRect(180, 90, 140, 140);
+		}
+    </script>
+  </body>
+</html>
