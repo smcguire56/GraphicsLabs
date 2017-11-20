@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      body {
+          background-color: white;
+		  
+      }
+	  #canvasOne{
+		border: 1px solid rgb(100, 100, 100);
+		background-color: #80dfff;
+		border-style: dotted;			
+	}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvasOne" width="600" height="400"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		//ctx.fillRect(10, 10, 100, 100);
+	  	ctx.clearRect(0, 0, 300, 200);
+
+		var ball = {
+			i: 0,
+			xpos: 15,
+			ypos: 25,
+			r: 20,
+			canHeight: 195,
+			cansWidth: 295,
+		    newX : 20,
+            newY : 40,
+            slices: 7,
+			angle: 0,
+			move: function(x, y) {
+				this.xpos = this.xpos + x;
+				this.ypos = this.ypos + y;
+			},
+			resize: function(rad) {
+				this.r += rad;
+			},
+			draw: function() {				
+				// Draw the ball (stroked, not filled).
+				ctx.beginPath();
+				
+				// draw outer layer of pizza
+				ctx.arc(ball.xpos, ball.ypos, ball.r, 0, 2 * Math.PI);
+				// draw inner pizza  circle
+				ctx.arc(ball.xpos, ball.ypos, ball.r * 0.85, 0, 2 * Math.PI);
+						
+				// draw a line from the centre of the pizza to the right
+				ctx.moveTo(ball.xpos, ball.ypos);
+				ctx.lineTo(ball.xpos+ball.r, ball.ypos);
+               
+			   //loop to draw slices
+                    for(i = 1; i < this.slices; i++){
+                        this.newX = this.r * Math.cos( (i*2*Math.PI) / this.slices) + ball.xpos;
+                        this.newY = this.r * Math.sin( (i*2*Math.PI) / this.slices) + ball.ypos;
+                        ctx.moveTo(this.newX,this.newY);
+                        ctx.lineTo(ball.xpos,ball.ypos);
+                        ctx.closePath();
+                        ctx.stroke();
+                 }
+				
+				ctx.fillStyle = "rgb(255, 153, 0)";
+				ctx.fill();
+				ctx.stroke();				
+			},	
+			rotate: function() {
+				this.slices = 7;
+				ctx.clearRect(0, 0, 600, 500);
+				//ball.move(2,3);
+				ball.draw();
+				setTimeout(ball.rotate, 100);
+			},
+			contains: function(x, y){
+				if(x > (ball.xpos + ball.r)){
+					return true; 
+				}
+			}
+
+		};
+			
+			ball.resize(60);
+			ball.move(220,100);
+			ball.draw();
+			ball.rotate();
+
+		function getRandomArbitrary(min, max) {
+			return Math.random() * (max - min) + min;
+		}
+	</script>
+	
+  </body>
+
+</html>
