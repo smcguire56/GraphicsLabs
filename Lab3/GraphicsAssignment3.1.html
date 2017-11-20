@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      body {
+          background-color: white;
+		  
+      }
+	  #canvas-for-ball{
+		border: 1px solid rgb(100, 100, 100);
+		background-color: #80dfff;
+		border-style: dotted;			
+	}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvas-for-ball" width="1500" height="800"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvas-for-ball");
+		// Get a 2D context for the canvas.
+		var ctx = canvas.getContext("2d");
+		// Make the fill style red.
+		ctx.fillStyle = "rgb(255, 0, 0)";
+		// Code for ball
+	  	var ball = {	
+			// The vertical location of the ball.
+			y : 450,
+			x : 50,
+			r: 50,
+			reverse: -1,
+			yVal:3,
+			xVal: 2,
+			canHeight: 800,
+			cansWidth: 1500,
+			newX : 100,
+			newY : 100,
+			slices: 7,     
+			move: function(x, y) {
+				this.x = this.x + x;
+				this.y = this.y + y;
+			},
+			resize: function(rad) {
+				this.r = this.r + rad;
+			},
+			draw: function() {				
+				ctx.clearRect(0, 0, 1500, 800);
+				// Draw the ball (stroked, not filled).
+				ctx.beginPath();
+				
+					// draw outer layer of pizza
+					ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+					// draw inner pizza  circle
+					ctx.arc(ball.x, ball.y, ball.r * 0.85, 0, 2 * Math.PI);
+							
+					// draw a line from the centre of the pizza to the right
+					ctx.moveTo(ball.x, ball.y);
+					ctx.lineTo(ball.x+ball.r, ball.y);
+				
+				//loop to draw slices
+						for(i = 1; i < this.slices; i++){
+							this.newX = this.r * Math.cos( (i*2*Math.PI) / this.slices) + ball.x;
+							this.newY = this.r * Math.sin( (i*2*Math.PI) / this.slices) + ball.y;
+							ctx.moveTo(this.newX,this.newY);
+							ctx.lineTo(ball.x,ball.y);
+							ctx.closePath();
+							ctx.stroke();
+					}	
+				//var currentColor =  getRandomColor();
+				//ctx.fillStyle = currentColor;
+				ctx.fillStyle = "orange";
+
+				ctx.fill();
+				ctx.stroke();				
+			},
+			
+			rotate: function() {
+				ctx.clearRect(0, 0, 800, 1500);
+				ball.move(.2,.3);
+				ball.draw();
+
+				//ball.slices= getRandomArbitrary(1,7);
+				ball.slices=7;
+				ball.draw();
+				setTimeout(ball.rotate, 100);	
+			}
+
+		};
+
+		// Add a Javascript event listener to the keypress event.
+		window.addEventListener("keypress", function(event) { 
+			// Just log the event to the console.
+			console.log(event);
+		});
+
+		//keypresses with jQuery
+		$(document.body).on('keydown', function(e) {
+			console.log(e.which);
+			switch (e.which) {
+			// key code for left arrow
+			case 37:
+				//console.log('left arrow key pressed!');
+				ball.xVal--;
+				break;
+			// key code for right arrow
+			case 39:
+				//console.log('right arrow key pressed!');
+				ball.xVal++;
+				break;
+			case 40:
+				//console.log('down arrow key pressed!');
+				ball.yVal++;
+				break;
+			case 38:
+				//console.log('up arrow key pressed!');
+				ball.yVal--;
+				break;
+			}
+		});
+
+    function repeatme(){
+        // Draw the ball.
+		ball.draw();
+        // Update the y location and give the ball gravity
+		// only add if inside canvas
+		if(ball.y <= ball.canHeight - ball.r){
+			ball.yVal += 0.3;
+		}
+		// bounce off right side
+		if(ball.x >= ball.cansWidth - ball.r /2){
+			ball.xVal -= 0.3;	
+		}
+		if(ball.x <= ball.r){
+			ball.xVal += 0.3;	
+			
+		}
+		ball.y += ball.yVal;	
+		ball.x += ball.xVal;
+		
+      if(ball.y >= ball.canHeight - ball.r) {
+		  // only go up 90% of previous height
+			ball.yVal = ball.yVal * ball.reverse * 0.9;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else if(ball.y <= ball.r){
+			
+			ball.yVal = ball.yVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else if(ball.x >= ball.cansWidth - ball.r){
+			ball.xVal = ball.xVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else if(ball.x <=ball.r){
+			ball.xVal = ball.xVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else{
+			window.requestAnimationFrame(this.repeatme);
+		}
+
+  }
+	    // start animation.
+      this.repeatme();
+    </script>
+
+  </body>
+
+</html>
