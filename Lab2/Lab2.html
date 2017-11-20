@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      body {
+          background-color: white;
+		  
+      }
+	  #canvasOne{
+		border: 1px solid rgb(100, 100, 100);
+		background-color: #80dfff;
+		border-style: dotted;			
+	}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvasOne" width="300" height="200"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		// Set the fill colour to bright red.
+		ctx.fillStyle = "rgb(255, 0, 0)";
+		// Create a filled rectangle at co-ordinates (10,10)
+		// with height and width set to 100.
+		//ctx.fillRect(10, 10, 100, 100);
+	  	ctx.clearRect(0, 0, 300, 200);
+
+	
+		var ball = {
+			xpos: 15,
+			ypos: 25,
+			r: 10,
+			canHeight: 195,
+			cansWidth: 295,
+			move: function(x, y) {
+				this.xpos = this.xpos + x;
+				this.ypos = this.ypos + y;
+			},
+			resize: function(rad) {
+				this.r = this.r + rad;
+			},
+			draw: function() {				
+				// Draw the ball (stroked, not filled).
+				ctx.beginPath();
+				ctx.arc(ball.xpos, ball.ypos, ball.r, 0, 2 * Math.PI);
+				ctx.fillStyle = "rgb(0, 51, 102)";
+				ctx.fill();
+				ctx.stroke();				
+			}
+		};
+
+			// move 30, 30 pixels and draw another ball			
+			ball.move(30,30);
+			ball.draw();
+
+			ball.move(30,30);
+			ball.draw();
+			
+			ball.move(60,60);
+			ball.resize(20);
+			ball.draw();
+		
+    </script>
+
+  </body>
+
+</html>

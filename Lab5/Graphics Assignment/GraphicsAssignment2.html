@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sean McGuire lab2</title>
+
+    <style type="text/css">
+        body {
+            background-color: white;
+
+        }
+
+        #canvasOne {
+            border: 1px solid rgb(100, 100, 100);
+            background-color: #80dfff;
+            border-style: dotted;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvasOne" width="600" height="400"></canvas>
+
+    <script type="text/javascript">
+        // Gets a handle to the element with id canvasOne.
+        var canvas = document.getElementById("canvasOne");
+        // Set the canvas up for drawing in 2D.
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, 400, 600);
+
+        function Ball(x, y, radius) {
+            // Declare all local variables.
+            this.xpos = x;
+            this.ypos = y;
+            this.r = radius;
+            this.rotation = 0;
+
+            var i = 0;
+            var newX = 20;
+            var newY = 40;
+            var slices = 8;
+
+            // move function to change x y of the pizza.
+            this.move = function(x, y) {
+                this.xpos = this.xpos + x;
+                this.ypos = this.ypos + y;
+            }
+
+            // change the size of the pizza.
+            this.resize = function(rad) {
+                this.r += rad;
+            }
+
+            // Draw the pizza 
+            this.draw = function() {
+                // start initial position.
+                ctx.beginPath();
+
+                // draw outer layer of pizza
+                ctx.arc(this.xpos, this.ypos, this.r, 0, Math.PI * 2);
+
+                //loop to draw slices
+                for (i = this.rotation; i < slices; i++) {
+                    this.newX = this.r * Math.cos((i * 2 * Math.PI) / slices) + this.xpos;
+                    this.newY = this.r * Math.sin((i * 2 * Math.PI) / slices) + this.ypos;
+                    ctx.moveTo(this.newX, this.newY);
+                    ctx.lineTo(this.xpos, this.ypos);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+                ctx.fillStyle = "rgb(255, 130, 0)";
+                ctx.fill();
+                ctx.stroke();
+
+                // draw inner pizza circle
+                ctx.beginPath();
+                ctx.arc(this.xpos, this.ypos, this.r - this.r / 10, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // rotate function, add the speed of the rotate to the rotate variable.
+            this.rotate = function(rotation_speed) {
+                this.rotation += rotation_speed;
+                if (this.rotation >= 1) {
+                    this.rotation = 0;
+                }
+                this.draw();
+            }
+
+            this.contains = function(x, y) {
+                console.log(this.xpos);
+                console.log(this.ypos);
+                // if the x is inside thie ball and the y is also, print inside, otherwise print outside.
+                if (x >= (this.xpos - this.r) && x <= (this.xpos + this.r) &&
+                    y >= (this.ypos - this.r) && y <= (this.ypos + this.r)) {
+                    console.log("inside");
+                    return true;
+                } else {
+                    console.log("outside");
+                }
+            }
+        }
+
+        first_ball = new Ball(50, 50, 20);
+        first_ball.move(100, 100);
+        first_ball.resize(50);
+        first_ball.draw();
+
+
+        second_ball = new Ball(40, 40, 30);
+        second_ball.draw();
+        second_ball.resize(10);
+        second_ball.move(300, 300);
+
+        // loop over to rotate pizza  
+        function repeatme() {
+            first_ball.rotate(0.08);
+            second_ball.rotate(0.06);
+            window.requestAnimationFrame(repeatme);
+        }
+
+        // calls the repeatme again
+        repeatme();
+    </script>
+
+</body>
+
+</html>

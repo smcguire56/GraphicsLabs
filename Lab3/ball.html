@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      body {
+          background-color: white;
+		  
+      }
+	  #canvas-for-ball{
+		border: 1px solid rgb(100, 100, 100);
+		
+		
+	}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvas-for-ball" width="300" height="200"></canvas>
+
+    <script type="text/javascript">
+      // Gets a handle to the element with id canvasOne.
+      var canvas = document.getElementById("canvas-for-ball");
+      // Get a 2D context for the canvas.
+      var ctx = canvas.getContext("2d");
+      
+	  //object
+	  var ball = {
+		 
+	
+      // The vertical location of the ball.
+       y : 10,
+	   x : 50,
+	   r: 11,
+	   reverse: -1,
+	   yVal:3,
+	   xVal: 2,
+	   canHeight: 195,
+	   cansWidth: 295,
+	   newX : 20,
+	   newY : 40,
+       slices: 7,
+
+	     
+	  }
+	  
+	  // A function to repeat every time the animation loops.
+	
+        function repeatme(){
+		
+		ctx.clearRect(0, 0, 300, 200);
+		
+        // Draw the ball (stroked, not filled).
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+
+		ctx.fillStyle = "rgb(0, 51, 102)";
+        ctx.stroke();
+		
+        // Update the y location.
+        ball.y += ball.yVal;
+		ball.x += ball.xVal;
+		
+        if(ball.y >= ball.canHeight - ball.r){
+		
+			ball.yVal = ball.yVal* ball.reverse;
+			
+			//ball.xVal = ball.xVal* ball.reverse;
+			
+			window.requestAnimationFrame(this.repeatme);
+			
+		}
+		else if(ball.y <= 0 + ball.r ){
+			
+			ball.yVal = ball.yVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else if(ball.x >= ball.cansWidth - ball.r){
+			
+			ball.xVal = ball.xVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		
+		}
+		else if(ball.x <= 0 + ball.r){
+			
+			ball.xVal = ball.xVal* ball.reverse;
+			window.requestAnimationFrame(this.repeatme);
+		}
+		else{
+			window.requestAnimationFrame(this.repeatme);
+		}
+        
+      }
+      
+      // Get the animation going.
+      this.repeatme();
+	
+    </script>
+
+  </body>
+
+</html>
